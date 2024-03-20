@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>DIJKSTRA</title>
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script> -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css">
+    <meta name="viewport" content="width= device-width, initial-scale=1">
+    <style type="text/css">
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            /*Đặt ảnh phía dưới các phần tử khác*/
+        }
+
+        table,
+        td,
+        th {
+            border: 1px black solid;
+            font-size: 10px;
+            text-align: center;
+        }
+
+        td {
+            text-transform: none;
+        }
+
+        table {
+            margin: auto;
+            border-radius: 10px;
+            border-collapse: collapse;
+            width: 400px;
+            height: 400px;
+
+            max-height: 400px;
+
+        }
+
+        /* TEST */
+
+        .verTex1 {
+            animation: ver1 1s ease-out alternate;
+        }
+
+        @keyframes ver1 {
+            from {
+                color: red;
+            }
+
+            to {
+                left: 1308px;
+                top: 0px;
+            }
+        }
+
+        th:hover,
+        td:hover {
+            border: 5px solid rgb(235, 45, 203);
+            background-color: rgb(219, 205, 217);
+
+        }
+
+
+
+        .cl1-affect {
+            animation: ver1-cl1 500ms 1 alternate;
+        }
+
+        @keyframes ver1-cl1 {
+            0% {
+                border: 2px solid red;
+                box-shadow: 0 0 50px rgb(202, 102, 232);
+                background-color: rgb(46, 96, 197);
+            }
+
+            33% {
+                border: 4px solid red;
+                box-shadow: 0 0 50px rgb(202, 102, 232);
+                background-color: rgb(46, 96, 197);
+            }
+
+            66% {
+                border: 2px solid red;
+                box-shadow: 0 0 50px rgb(202, 102, 232);
+                background-color: rgb(46, 96, 197);
+            }
+
+            100% {
+                border: 4px solid red;
+                box-shadow: 0 0 50px rgb(202, 102, 232);
+                background-color: rgb(46, 96, 197);
+            }
+        }
+
+        .content-text {
+            display: inline-flex;
+            width: 435px;
+            overflow: scroll;
+            white-space: pre-line;
+
+            text-overflow: ellipsis;
+            max-height: 100px;
+        }
+
+        /*button style*/
+        .container {
+            text-align: center;
+            max-width: 100%;
+        }
+
+
+        .neon-container {
+            display: inline-block;
+            width: 100px;
+            height: 20px;
+            position: relative;
+            display: inline-block;
+            padding: 10px 20px;
+
+        }
+
+
+        .neon-button {
+
+
+            width: 100%;
+            height: 100%;
+            font-family: Courier New;
+            font-weight: bold;
+            border: 1px solid rgb(41, 187, 192);
+            border-color: #d02718;
+            border-radius: 50px;
+            font-size: 14px;
+            color: #fff;
+            background-color: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            /* text-shadow: 0px 1px 0px #810e05; */
+            background: linear-gradient(rgb(120, 146, 194), #476e9e);
+            box-shadow: 3px 4px 0px 0px rgb(72, 91, 91);
+        }
+
+        /* Neon effect */
+        .neon-button:hover,
+        .buttonClass:hover {
+            box-shadow: 0 0 5px #fff, 0 0 6px #fff, 0 0 7px #fff, 0 0 8px rgb(188, 9, 68), 0 0 9px rgb(188, 9, 68), 0 0 10px rgb(188, 9, 68), 0 0 12px rgb(188, 9, 68), 0 0 14px rgb(188, 9, 68);
+            background: rgb(15, 230, 68);
+            color: whitesmoke;
+        }
+
+        .neon-button:active,
+        .buttonClass:active {
+            box-shadow: 0 0 5px #fff, 0 0 10px #fff, 0 0 15px #fff, 0 0 20px rgb(188, 9, 68), 0 0 35px rgb(188, 9, 68), 0 0 40px rgb(188, 9, 68), 0 0 50px rgb(188, 9, 68), 0 0 75px rgb(188, 9, 68);
+        }
+
+
+
+        /*end button style*/
+
+
+        .hightLight {
+            animation: changeColor 100ms 2;
+        }
+
+        @keyframes changeColor {
+            0% {
+
+                color: rgb(156, 222, 150);
+            }
+
+            25% {
+
+                color: rgb(43, 170, 229);
+            }
+
+            50% {
+
+                color: rgb(15, 6, 187);
+            }
+
+            75% {
+
+                color: rgb(171, 21, 161);
+            }
+
+            100% {
+
+                color: rgb(27, 228, 9);
+            }
+        }
+
+        .animaion-way {
+            animation: rainbow-bar 2s ease-in-out infinite;
+        }
+
+        @keyframes rainbow-bar {
+            0% {
+                left: -80px;
+            }
+
+            14.28% {
+                left: 0;
+                background-color: red;
+            }
+
+            28.56% {
+                left: 80px;
+                background-color: orange;
+            }
+
+            42.84% {
+                left: 160px;
+                background-color: yellow;
+            }
+
+            57.12% {
+                left: 240px;
+                background-color: green;
+            }
+
+            71.4% {
+                left: 320px;
+                background-color: blue;
+            }
+
+            85.68% {
+                left: 400px;
+                background-color: indigo;
+            }
+
+            100% {
+                left: 480px;
+                background-color: violet;
+            }
+        }
+
+        .animaion-way{
+            animation: rainbow-bar 2s linear infinite;
+            height:2px;
+            width:1080px;
+            position: absolute;
+            margin: 0 auto;
+        }
+
+
+        
+    </style>
+</head>
+
+<body>
+   
+        <img src="img/background/pexels-tbee-82256.jpg" alt="bg-image" class="bg-image">
+        <main>
+            <div style="text-align:center; margin: 0 auto; width:100%; font: 22pt Times New Roman; color: rgb(7, 7, 7);">
+                DIJKSTRA
+            </div>
+            <hr class="animaion-way" style="background-color:red;margin-bottom: 10px; "  />
+            <div style="text-align:right; margin-right: 80px;margin-top: 10px;  font: 14pt Times New Roman;color: aliceblue;" ;><i >Trần Dương
+                    Phương Thảo B2003922 </i></div>
+            <button onClick="randomGraph()">Random Graph</button>
+            <button onClick=mygraph.reset();>Clear all</button>
+            <button id="clearAlg" onClick=mygraph.clearAlg();>Clear algorithm</button>
+            &nbsp;&nbsp;&nbsp;
+            Maximum Capacity:
+            <input style="text-align:center" ; size=5 value="100" id="maxCap">
+    
+            <div class="tooltip" style="margin-left:300px;">
+                <div style="font-size:18px; color:red;">
+                    <b>&#x27A2; user manual</b></div>
+                <span class="tooltiptext">
+                    &bull; To <u>create</u> a <i><b>Vertex</b></i>, double click anywhere whithin the left canvas.<br />
+                    &bull; To <u>create</u> an <i><b>Edge</b></i>, click on a vertex and drag to another certex not
+                    releasing
+                    the mouse.<br />
+                    &bull; Clicking on a Vertex will open vertex menu.<br />
+                    &bull; <i><b>Source</b></i> color is teal, <i><b>Sink</b></i> color is grey.<br />
+                    &bull; Clicking on an Edge will open edge menu.<br />
+                    &bull; To <b>Zoom in/out</b> scroll with mouse wheel within the canvas.<br />
+                    &bull; <b>Random Graph</b> button will generate a random graph.<br />
+                    &bull; <b>Clear all</b> button will delete everything.<br />
+                    &bull; <b>Clear algorithm</b> button will reset algorithm.<br />
+                    &bull; <b>Maximum Capapcity</b> button box will set graph's edges maximum capacity.<br />
+                    <!-- &bull; <b>Algorithm</b> select box will set <b>Edmonds-Karp</b> or <b>Capacity-Scaling</b>
+                    algorithm.<br /> -->
+                    &bull; <b>Play Algorithm</b> will animate the algorithm.<br />
+                    &bull; The <b>Speed</b> selector will set the binking speed. (Will update for each augmenting path).
+                    <br />
+                    &bull; <b>Save current graph</b> will save the current graph. <br />
+                    &bull; <b>Restore saved graph</b> will restore the last saved graph.<br />
+                </span>
+            </div>
+            <br /><br />
+            Algorithm:
+            <select id="algorithm">
+                <option value="edmondsKarp" selected></option>
+                <option value="bottleneck"></option>
+            </select>
+            &nbsp;
+            <button id="playButton" onClick="play()">Play algorithm</button>
+            &nbsp;
+            Speed:
+            <button onClick="speedUp()">+</button>
+            <input style="text-align:center" size="1" value="5" id="speed" disabled>
+            <button onClick="slowDown()">-</button>
+            &nbsp;
+            <button id="saveB" onClick="save()">Save current graph</button>
+            &nbsp;
+            <button id="restoreB" onClick="restore()">Restore saved graph</button>
+            &nbsp;
+    
+            <button id="playNoA" onClick="playNoAnimation()">Play no animation</button>
+            &nbsp;
+            
+            <div class="neon-container">
+                <button id="playDi" class="neon-button" onClick="playAnmationDi()">PlayDIJKSTRA</button>
+            </div>
+            &nbsp;
+            <div class="neon-container">
+                <button id="pause" class="neon-button" onClick="pauseAnimation()">PAUSE</button>
+            </div>
+    
+            &nbsp;
+            <div class="neon-container">
+                <button id="resume" class="neon-button" onClick="resumeAnmation()">RESUME</button>
+            </div>
+    
+    
+            &nbsp;
+    
+    
+    
+            <div
+                style="width: 435px; height:77px; border: 1px solid rgb(16, 196, 97); background-color:rgb(16, 93, 176); left: 1032px; position: absolute;text-align: center;">
+                <p><span id="script" class="content-text"
+                        style="width: 435px; height: 70px;font-size:12px; text-align:center;color: white;text-transform: none;">
+                    </span>
+                </p>
+            </div>
+    
+            <div
+                style="width: 400px; height:50px; border: 1px solid rgb(16, 196, 97); background-color:rgb(16, 93, 176); left: 502px; position: absolute;text-align: center;margin-top:6px">
+                <p><span id="step-script" class="content-text"
+                        style="width: 400px; height: 50px;font-size:12px; text-align:center;color: white;text-transform: none;"></span>
+                </p>
+            </div>
+    
+    
+    
+    
+            <br>
+            <label for="speedSlider" class="form-label">Speed</label>
+            <br>
+            <div>
+                <div id="speedValue"
+                    style="text-align:center; width:25px; height:20px; border:1px solid black; border-radius:5px; box-shadow: 0 0 0 rgb(16, 211, 81); background-color: rgb(74, 172, 79);"
+                    value="" display="none">
+    
+                </div>
+                <input type="range" class="form-range" min="0" max="100" step="1" value="50" id="speedSlider"
+                    style="width:100px">
+            </div>
+    
+            <br>
+    
+    
+    
+    
+    
+    
+            <br /><br /> 
+            <div style="margin: 0 auto; width: 580px; border-color:teal; border-style:groove;">
+                &nbsp;&nbsp;&nbsp;
+                Maximum dijkstra:
+                <input style="text-align:center" size=3 value="0" id="MaxFlowText" disabled>
+                &nbsp;&nbsp;&nbsp;
+                Augmented by:
+                <input style="text-align:center" size=3 value="0" id="aug" disabled>
+    
+                &nbsp;&nbsp;&nbsp;
+                Augmenting Paths:
+                <input style="text-align:center" size=3 value="0" id="path" disabled>
+            </div>
+            <div class="container-content">
+                <div class="container-item">dijkstra:</div>
+                <div class="container-item">result graph:</div>
+                <div class="container-item">result table:</div>
+            </div>
+            
+            <div class="container">
+                <canvas id="canvas" width="450" height="400" style="border-right: 1px solid black;"
+                    class="grid-item"></canvas>
+                <canvas id="canvas2" width="450" height="400" style="border-right: 1px solid black;"
+                    class="grid-item"></canvas>
+    
+    
+                <table class="grid-item" id="tb6ver" style="max-width: 100%;max-height:100%" >
+                    <tr>
+                        <th scope="col" style="width:40px;"></th>
+                        <th scope="col" style="width:40px;" id="cl1">1</th>
+                        <th scope="col" style="width:40px;" id="cl2">2</th>
+                        <th scope="col" style="width:40px;" id="cl3">3</th>
+                        <th scope="col" style="width:40px;" id="cl4">4</th>
+                        <th scope="col" style="width:40px;" id="cl5">5</th>
+                        <th scope="col" style="width:40px;" id="cl6">6</th>
+                        <th scope="col" id="cvkt">JOBS</th>
+                    </tr>
+    
+                    <tr>
+                        <th scope="col">mark[u]</th>
+                        <th scope="col" style="width:40px;" id="m1"><i class="fa-solid fa-x"></i></th>
+                        <th scope="col" style="width:40px;" id="m2"><i class="fa-solid fa-x"></i></th>
+                        <th scope="col" style="width:40px;" id="m3"><i class="fa-solid fa-x"></i></th>
+                        <th scope="col" style="width:40px;" id="m4"><i class="fa-solid fa-x"></i></th>
+                        <th scope="col" style="width:40px;" id="m5"><i class="fa-solid fa-x"></i></th>
+                        <th scope="col" style="width:40px;" id="m6"><i class="fa-solid fa-x"></i></th>
+                        <th scope="col" id="cvm"></th>
+                    </tr>
+    
+                    <tr>
+                        <th scope="col">pi[u]</th>
+                        <th scope="col" style="width:40px;" id="pi1"><i class="fa-solid fa-infinity"></i></th>
+                        <th scope="col" style="width:40px;" id="pi2"><i class="fa-solid fa-infinity"></i></th>
+                        <th scope="col" style="width:40px;" id="pi3"><i class="fa-solid fa-infinity"></i></th>
+                        <th scope="col" style="width:40px;" id="pi4"><i class="fa-solid fa-infinity"></i></th>
+                        <th scope="col" style="width:40px;" id="pi5"><i class="fa-solid fa-infinity"></i></th>
+                        <th scope="col" style="width:40px;" id="pi6"><i class="fa-solid fa-infinity"></i></th>
+                        <th scope="col" id="cvpi"></th>
+                    </tr>
+    
+    
+                    <tr>
+                        <th scope="row" id="l1">STEP 1</th>
+                        <td id="r1v1"></td>
+                        <td id="r1v2"></td>
+                        <td id="r1v3"></td>
+                        <td id="r1v4"></td>
+                        <td id="r1v5"></td>
+                        <td id="r1v6"></td>
+                        <td id="r1cv"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="l2">STEP 2</th>
+                        <td id="r2v1"></td>
+                        <td id="r2v2"></td>
+                        <td id="r2v3"></td>
+                        <td id="r2v4"></td>
+                        <td id="r2v5"></td>
+                        <td id="r2v6"></td>
+                        <td id="r2cv"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="l3">STEP 3</th>
+                        <td id="r3v1"></td>
+                        <td id="r3v2"></td>
+                        <td id="r3v3"></td>
+                        <td id="r3v4"></td>
+                        <td id="r3v5"></td>
+                        <td id="r3v6"></td>
+                        <td id="r3cv"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="l4">STEP 4</th>
+                        <td id="r4v1"></td>
+                        <td id="r4v2"></td>
+                        <td id="r4v3"></td>
+                        <td id="r4v4"></td>
+                        <td id="r4v5"></td>
+                        <td id="r4v6"></td>
+                        <td id="r4cv"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="l5">STEP 5</th>
+                        <td id="r5v1"></td>
+                        <td id="r5v2"></td>
+                        <td id="r5v3"></td>
+                        <td id="r5v4"></td>
+                        <td id="r5v5"></td>
+                        <td id="r5v6"></td>
+                        <td id="r5cv"></td>
+                    </tr>
+    
+                    <tr>
+                        <th scope="row" id="l6">STEP 6</th>
+                        <td id="r6v1"></td>
+                        <td id="r6v2"></td>
+                        <td id="r6v3"></td>
+                        <td id="r6v4"></td>
+                        <td id="r6v5"></td>
+                        <td id="r6v6"></td>
+                        <td id="r6cv"></td>
+                    </tr>
+                </table>
+    
+                <!--Data table for graph contain 8vertexes : default style='none'-->
+                <table id="tb8ver" class="grid-item" style="display:none; max-width: 100%;max-height:100%">
+                    <tr>
+                        <th scope="col"></th>
+                        <th scope="col" style="width:40px;" id="8_cl1">1</th>
+                        <th scope="col" style="width:40px;" id="8_cl2">2</th>
+                        <th scope="col" style="width:40px;" id="8_cl3">3</th>
+                        <th scope="col" style="width:40px;" id="8_cl4">4</th>
+                        <th scope="col" style="width:40px;" id="8_cl5">5</th>
+                        <th scope="col" style="width:40px;" id="8_cl6">6</th>
+                        <th scope="col" style="width:40px;" id="8_cl7">7</th>
+                        <th scope="col" style="width:40px;" id="8_cl8">8</th>
+                        <th scope="col" id="8_cvkt">Công việc</th>
+                    </tr>
+    
+                    <tr>
+                        <th scope="col">Mark[u]</th>
+                        <th scope="col" style="width:40px;" id="8_m1"><i class="fa-solid fa-x"></i></th>
+                        <th scope="col" style="width:40px;" id="8_m2"><i class="fa-solid fa-x"></i></th>
+                        <th scope="col" style="width:40px;" id="8_m3"><i class="fa-solid fa-x"></i></th>
+                        <th scope="col" style="width:40px;" id="8_m4"><i class="fa-solid fa-x"></i></th>
+                        <th scope="col" style="width:40px;" id="8_m5"><i class="fa-solid fa-x"></i></th>
+                        <th scope="col" style="width:40px;" id="8_m6"><i class="fa-solid fa-x"></i></th>
+                        <th scope="col" style="width:40px;" id="8_m7"><i class="fa-solid fa-x"></i></th>
+                        <th scope="col" style="width:40px;" id="8_m8"><i class="fa-solid fa-x"></i></th>
+                        <th scope="col" id="8_cvm"></th>
+                    </tr>
+    
+                    <tr>
+                        <th scope="col">pi[u]</th>
+                        <th scope="col" style="width:40px;" id="8_pi1"><i class="fa-solid fa-infinity"></i></th>
+                        <th scope="col" style="width:40px;" id="8_pi2"><i class="fa-solid fa-infinity"></i></th>
+                        <th scope="col" style="width:40px;" id="8_pi3"><i class="fa-solid fa-infinity"></i></th>
+                        <th scope="col" style="width:40px;" id="8_pi4"><i class="fa-solid fa-infinity"></i></th>
+                        <th scope="col" style="width:40px;" id="8_pi5"><i class="fa-solid fa-infinity"></i></th>
+                        <th scope="col" style="width:40px;" id="8_pi6"><i class="fa-solid fa-infinity"></i></th>
+                        <th scope="col" style="width:40px;" id="8_pi7"><i class="fa-solid fa-infinity"></i></th>
+                        <th scope="col" style="width:40px;" id="8_pi8"><i class="fa-solid fa-infinity"></i></th>
+                        <th scope="col" id="8_cvpi"></th>
+                    </tr>
+    
+                    <tr>
+                        <th scope="row" id="8_l1">STEP 1</th>
+                        <td id="8_r1v1"></td>
+                        <td id="8_r1v2"></td>
+                        <td id="8_r1v3"></td>
+                        <td id="8_r1v4"></td>
+                        <td id="8_r1v5"></td>
+                        <td id="8_r1v6"></td>
+                        <td id="8_r1v7"></td>
+                        <td id="8_r1v8"></td>
+                        <td id="8_r1cv"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="8_l2">STEP 2</th>
+                        <td id="8_r2v1"></td>
+                        <td id="8_r2v2"></td>
+                        <td id="8_r2v3"></td>
+                        <td id="8_r2v4"></td>
+                        <td id="8_r2v5"></td>
+                        <td id="8_r2v6"></td>
+                        <td id="8_r2v7"></td>
+                        <td id="8_r2v8"></td>
+                        <td id="8_r2cv"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="8_l3">STEP 3</th>
+                        <td id="8_r3v1"></td>
+                        <td id="8_r3v2"></td>
+                        <td id="8_r3v3"></td>
+                        <td id="8_r3v4"></td>
+                        <td id="8_r3v5"></td>
+                        <td id="8_r3v6"></td>
+                        <td id="8_r3v7"></td>
+                        <td id="8_r3v8"></td>
+                        <td id="8_r3cv"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="8_l4">STEP 4</th>
+                        <td id="8_r4v1"></td>
+                        <td id="8_r4v2"></td>
+                        <td id="8_r4v3"></td>
+                        <td id="8_r4v4"></td>
+                        <td id="8_r4v5"></td>
+                        <td id="8_r4v6"></td>
+                        <td id="8_r4v7"></td>
+                        <td id="8_r4v8"></td>
+                        <td id="8_r4cv"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="8_l5">STEP 5</th>
+                        <td id="8_r5v1"></td>
+                        <td id="8_r5v2"></td>
+                        <td id="8_r5v3"></td>
+                        <td id="8_r5v4"></td>
+                        <td id="8_r5v5"></td>
+                        <td id="8_r5v6"></td>
+                        <td id="8_r5v7"></td>
+                        <td id="8_r5v8"></td>
+                        <td id="8_r5cv"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="8_l6">STEP 6</th>
+                        <td id="8_r6v1"></td>
+                        <td id="8_r6v2"></td>
+                        <td id="8_r6v3"></td>
+                        <td id="8_r6v4"></td>
+                        <td id="8_r6v5"></td>
+                        <td id="8_r6v6"></td>
+                        <td id="8_r6v7"></td>
+                        <td id="8_r6v8"></td>
+                        <td id="8_r6cv"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="8_l7">STEP 7</th>
+                        <td id="8_r7v1"></td>
+                        <td id="8_r7v2"></td>
+                        <td id="8_r7v3"></td>
+                        <td id="8_r7v4"></td>
+                        <td id="8_r7v5"></td>
+                        <td id="8_r7v6"></td>
+                        <td id="8_r7v7"></td>
+                        <td id="8_r7v8"></td>
+                        <td id="8_r7cv"></td>
+                    </tr>
+                    <tr>
+                        <th scope="row" id="8_l8">STEP 8</th>
+                        <td id="8_r8v1"></td>
+                        <td id="8_r8v2"></td>
+                        <td id="8_r8v3"></td>
+                        <td id="8_r8v4"></td>
+                        <td id="8_r8v5"></td>
+                        <td id="8_r8v6"></td>
+                        <td id="8_r8v7"></td>
+                        <td id="8_r8v8"></td>
+                        <td id="8_r8cv"></td>
+                    </tr>
+    
+                </table>
+    
+    
+    
+    
+    
+    
+    
+    
+            </div>
+    
+            <div id="vertexMenu">
+                <button class="button" id="vButton1" onClick=moveVertex();> Move </button> <br>
+                <button class="button" id="vButton2" onClick=removeVertex();> Delete </button> <br>
+                <button class="button" id="vButton3" onClick=chooseS();> Start </button> <br>
+                <button class="button" id="vButton4" onClick=chooseT();> End </button> <br>
+                <button class="button" id="vButton5" onClick=cancel();> Cancel </button> <br>
+            </div>
+            <div id="edgeMenu">
+                <button class="button" id="eButton1" onClick=flip();> flip </button> <br>
+                <button class="button" id="eButton2" onClick=setCapacity();> Set Capacity </button> <br>
+                <button class="button" id="eButton3" onClick=removeEdge();> Delete </button> <br>
+                <button class="button" id="eButton4" onClick=cancel();> Cancel </button> <br>
+            </div>
+    
+        </main>
+    
+
+
+    <script type="text/javascript" src="dijkstra.js"></script>
+</body>
+
+</html>
